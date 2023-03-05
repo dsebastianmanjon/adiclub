@@ -1,0 +1,73 @@
+version: "3.5"
+
+services:
+  public-service:
+    image: localhost/adidas-be-challenge-publicservice:latest
+    container_name: adidas-be-challenge-publicservice
+    restart: unless-stopped
+    build:
+      context: public-service
+      dockerfile: Dockerfile
+    ports:
+      - "9090:9090"
+    links:
+      - "priority-sale-service"
+
+  priority-sale-service:
+    image: localhost/adidas-be-challenge-prioritysaleservice:latest
+    container_name: adidas-be-challenge-prioritysaleservice
+    restart: unless-stopped
+    build:
+      context: priority-sale-service
+      dockerfile: Dockerfile
+    links:
+      - "adi-club-service"
+      - "email-service"
+
+  adi-club-service:
+    image: localhost/adidas-be-challenge-adiclubservice:latest
+    container_name: adidas-be-challenge-adiclubservice
+    restart: unless-stopped
+    build:
+      context: adiclub-service
+      dockerfile: Dockerfile
+
+  email-service:
+    image: localhost/adidas-be-challenge-emailservice:latest
+    container_name: adidas-be-challenge-emailservice
+    restart: unless-stopped
+    build:
+      context: email-service
+      dockerfile: Dockerfile
+
+  queue-service:
+    image: localhost/adidas-be-challenge-queueservice:latest
+    container_name: adidas-be-challenge-queueservice
+    restart: unless-stopped
+    build:
+      context: queue-service
+      dockerfile: Dockerfile
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: adidas-be-challenge-zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - 22181:2181
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: adidas-be-challenge-kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - 39092:39092
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: adidas-be-challenge-zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://adidas-be-challenge-kafka:9092,PLAINTEXT_HOST://adidas-be-challenge-kafka:39092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1

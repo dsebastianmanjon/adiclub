@@ -1,0 +1,64 @@
+{
+	"info": {
+		"_postman_id": "a280adca-995b-4c3a-b9d3-58e89ebd1b6d",
+		"name": "Testing",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2580890"
+	},
+	"item": [
+		{
+			"name": "New subscription for adiclub",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"userMail\": \"cooluser_{{$randomInt}}@adiclub.com\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9090/subscription",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"subscription"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New subscription for non adiclub",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userMail\": \"horribleuser_{{$randomInt}}@bulcida.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9090/subscription",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"subscription"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
